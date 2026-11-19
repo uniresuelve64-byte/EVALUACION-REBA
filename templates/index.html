@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evaluación Ergonómica REBA</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='css/estilos.css') }}">
+</head>
+<body>
+<header class="top"><div class="brand-mark">R</div><div><strong>ERGONOMÍA PRO</strong><small>Evaluación postural de cuerpo entero</small></div><span class="method">MÉTODO REBA</span></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">ANÁLISIS POSTURAL INTELIGENTE</div><h1>Evalúa la postura.<br><em>Mejora el bienestar.</em></h1><p>Sube una fotografía de la actividad laboral y genera un informe con hallazgos posturales, nivel de riesgo y recomendaciones de mejora.</p></section>
+{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for category,message in messages %}<div class="alert">{{ message }}</div>{% endfor %}{% endif %}{% endwith %}
+<form class="panel" action="{{ url_for('analizar') }}" method="post" enctype="multipart/form-data">
+<div class="section-title"><span>01</span><div><h2>Datos de la persona</h2><p>Información básica para identificar el informe</p></div></div>
+<div class="fields">
+<label>Nombre completo<input name="nombre" required placeholder="Nombre y apellidos"></label>
+<label>Edad<input name="edad" type="number" min="16" max="100" placeholder="Edad"></label>
+<label>Cargo o actividad<input name="cargo" required placeholder="Ej. Operario, auxiliar, técnico"></label>
+<label>Área de trabajo<input name="area" placeholder="Ej. Producción, oficina, bodega"></label>
+</div>
+<div class="section-title space"><span>02</span><div><h2>Factores de la tarea</h2><p>Selecciona las condiciones que acompañan la postura</p></div></div>
+<div class="fields three">
+<label>Carga o fuerza<select name="carga"><option value="ninguna">Sin carga apreciable</option><option value="ligera" selected Ligera>Ligera (hasta 5 kg aprox.)</option><option value="moderada">Moderada (5 a 10 kg aprox.)</option><option value="alta">Alta (más de 10 kg aprox.)</option></select></label>
+<label>Tipo de agarre<select name="acoplamiento"><option value="bueno">Bueno</option><option value="regular" selected>Regular</option><option value="deficiente">Deficiente</option></select></label>
+<label>Actividad muscular<select name="actividad"><option value="estatica">Postura estática o sostenida</option><option value="repetitiva">Movimiento repetitivo</option><option value="cambios">Cambios posturales frecuentes</option></select></label>
+</div>
+<div class="section-title space"><span>03</span><div><h2>Fotografía de la actividad</h2><p>Preferiblemente cuerpo completo y articulaciones visibles</p></div></div>
+<label class="upload" id="dropzone"><input type="file" name="imagen" id="imagen" accept="image/png,image/jpeg,image/webp" required><span class="upload-icon">↑</span><strong>Selecciona o arrastra una fotografía</strong><small>JPG, PNG o WEBP · máximo 12 MB</small><span id="filename" class="filename">Ningún archivo seleccionado</span></label>
+<div class="actions"><button class="primary" type="submit">Analizar postura <span>→</span></button><small>Se generará un análisis y un informe descargable en PDF.</small></div>
+</form>
+<footer>ERGONOMÍA PRO · Evaluación postural basada en REBA</footer>
+</main>
+<script src="{{ url_for('static',filename='js/script.js') }}"></script>
+</body></html>

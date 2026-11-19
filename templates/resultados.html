@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resultados de evaluación REBA</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/estilos.css') }}"
+    >
+</head>
+
+<body>
+
+<header class="top">
+
+    <div class="brand-mark">R</div>
+
+    <div>
+        <strong>ERGONOMÍA PRO</strong>
+        <small>Informe de evaluación postural</small>
+    </div>
+
+    <span class="method">MÉTODO REBA</span>
+
+</header>
+
+
+<main class="wrap results">
+
+    <div class="result-head">
+
+        <div>
+            <div class="eyebrow">EVALUACIÓN COMPLETADA</div>
+
+            <h1>
+                Resultado de
+                <em>{{ r.nombre }}</em>
+            </h1>
+
+            <p>
+                {{ r.cargo }} · {{ r.fecha }}
+            </p>
+        </div>
+
+        <a class="secondary" href="{{ url_for('index') }}">
+            Nueva evaluación
+        </a>
+
+    </div>
+
+
+    <!-- RESULTADO GENERAL -->
+
+    <section class="score-card {{ r.color }}">
+
+        <div>
+
+            <span class="label">
+                ÍNDICE POSTURAL ESTIMADO
+            </span>
+
+            <div class="score">
+                {{ r.indice }}
+                <small>/15</small>
+            </div>
+
+            <strong>
+                Nivel {{ r.nivel }}
+            </strong>
+
+            <p>{{ r.accion }}</p>
+
+        </div>
+
+        <div class="score-side">
+
+            <div class="ring">
+                {{ r.indice }}
+            </div>
+
+            <small>
+                Índice estimado<br>
+                basado en componentes REBA
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- IMAGEN Y HALLAZGOS -->
+
+    <div class="result-grid">
+
+        <section class="panel">
+
+            <h2>Imagen analizada y ángulos calculados</h2>
+
+            <img
+                class="analysis-image"
+                src="{{ r.imagen_analizada_url }}"
+                alt="Fotografía con puntos articulares y ángulos detectados"
+            >
+
+            <p class="muted">
+                Los puntos articulares, las líneas y las etiquetas
+                se generan automáticamente a partir de la fotografía.
+            </p>
+
+        </section>
+
+
+        <section class="panel">
+
+            <h2>Hallazgos por segmento</h2>
+
+            {% for h in r.hallazgos %}
+
+                <div class="finding">
+
+                    <div>
+
+                        <strong>{{ h.name }}</strong>
+
+                        <small>
+                            {{ h.label }}
+                        </small>
+
+                        <small>
+                            {{ h.value }}
+                        </small>
+
+                    </div>
+
+                    <b>
+                        {{ h.score }} pt
+                    </b>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </div>
+
+
+    <!-- GRÁFICA -->
+
+    <section class="panel chart-panel">
+
+        <h2>Gráfica de puntos por segmento</h2>
+
+        <p class="muted">
+            Comparación de los puntos asignados a cada segmento corporal.
+        </p>
+
+        <div class="chart-bars">
+
+            {% for h in r.hallazgos %}
+
+                <div class="chart-row">
+
+                    <span>{{ h.name }}</span>
+
+                    <div class="bar-track">
+
+                        <div
+                            class="bar-fill"
+                            style="width: {{ (h.score / 4 * 100)|round(0) }}%;"
+                        ></div>
+
+                    </div>
+
+                    <b>{{ h.score }}</b>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <div class="chart-scale">
+
+            <span>0 puntos</span>
+            <span>4 puntos</span>
+
+        </div>
+
+    </section>
+
+
+    <!-- ÁNGULOS -->
+
+    <section class="panel">
+
+        <h2>Resumen de ángulos calculados</h2>
+
+        <p class="muted">
+            Mediciones angulares detectadas automáticamente en la imagen.
+        </p>
+
+        <div class="angle-grid">
+
+            <div>
+                <span>Hombro</span>
+                <strong>{{ r.angulos.hombro }}°</strong>
+            </div>
+
+            <div>
+                <span>Codo</span>
+                <strong>{{ r.angulos.codo }}°</strong>
+            </div>
+
+            <div>
+                <span>Cadera</span>
+                <strong>{{ r.angulos.cadera }}°</strong>
+            </div>
+
+            <div>
+                <span>Rodilla</span>
+                <strong>{{ r.angulos.rodilla }}°</strong>
+            </div>
+
+            <div>
+                <span>Desviación del tronco</span>
+                <strong>{{ r.angulos.tronco }}°</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECOMENDACIONES -->
+
+    <section class="panel">
+
+        <h2>Recomendaciones de mejora</h2>
+
+        <div class="recommendations">
+
+            {% for rec in r.recomendaciones %}
+
+                <div class="recommendation">
+
+                    <span>✓</span>
+
+                    <p>{{ rec }}</p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- FACTORES COMPLEMENTARIOS -->
+
+    <section class="panel factors">
+
+        <h2>Factores complementarios</h2>
+
+        <div>
+
+            <span>Carga</span>
+            <strong>{{ r.carga }}</strong>
+
+            <span>Acoplamiento</span>
+            <strong>{{ r.acoplamiento }}</strong>
+
+            <span>Actividad</span>
+            <strong>{{ r.actividad }}</strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- BOTONES -->
+
+    <div class="bottom-actions">
+
+        <a
+            class="primary"
+            href="{{ url_for('informe', resultado_id=r.id) }}"
+        >
+            Descargar informe PDF ↓
+        </a>
+
+        <a
+            class="secondary"
+            href="{{ url_for('index') }}"
+        >
+            Realizar otra evaluación
+        </a>
+
+    </div>
+
+
+    <p class="footnote">
+
+        El índice es una estimación automatizada de cribado postural
+        basada en la imagen y los factores declarados. Úsalo como apoyo
+        preventivo para priorizar mejoras ergonómicas.
+
+    </p>
+
+</main>
+
+</body>
+</html>
